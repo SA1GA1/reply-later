@@ -1,6 +1,6 @@
 # Reply Later — Android MVP Design
 
-**Status:** Draft for product review  
+**Status:** Approved for MVP implementation
 **Date:** 2026-09-12  
 **Platform:** Android 8.0+ (API 26+)  
 **Language/UI:** Kotlin, Jetpack Compose, Material 3
@@ -293,4 +293,3 @@ The MVP is ready when:
 - [Notification listener service](https://developer.android.com/reference/android/service/notification/NotificationListenerService)
 - [Notification runtime permission](https://developer.android.com/develop/ui/views/notifications/notification-permission)
 - [Schedule alarms](https://developer.android.com/develop/background-work/services/alarms)
-
