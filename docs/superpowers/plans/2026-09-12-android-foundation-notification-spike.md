@@ -105,7 +105,7 @@ app/src/test/java/app/replylater/android/capture/parser/SupportedNotificationPar
 - Consumes: approved visual direction from `design/mockups` and application ID `app.replylater.android`.
 - Produces: `MainActivity` and `@Composable fun ReplyLaterRoot()` as the executable application shell.
 
-- [ ] **Step 1: Generate the Gradle wrapper and version catalog**
+- [x] **Step 1: Generate the Gradle wrapper and version catalog**
 
 Use Android Studio's bundled JDK 17 and Gradle 9.6.0. Define these exact catalog entries:
 
@@ -133,7 +133,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ```
 
-- [ ] **Step 2: Write the failing home-date test**
+- [x] **Step 2: Write the failing home-date test**
 
 ```kotlin
 package app.replylater.android.ui
@@ -151,16 +151,16 @@ class HomeDateFormatterTest {
 }
 ```
 
-- [ ] **Step 3: Run the test and confirm the project is not yet buildable**
+- [x] **Step 3: Run the test and confirm the project is not yet buildable**
 
 Run: `./gradlew testDebugUnitTest`  
 Expected: compilation failure because `formatHomeDate` does not exist yet.
 
-- [ ] **Step 4: Configure the app module and manifest**
+- [x] **Step 4: Configure the app module and manifest**
 
 Configure `namespace = "app.replylater.android"`, `compileSdk = 37`, `minSdk = 26`, `targetSdk = 36`, Java/Kotlin toolchain 17, AGP built-in Kotlin, Compose, `buildConfig = true`, and unit tests. The manifest must set `android:allowBackup="false"`, expose only `MainActivity`, and omit `android.permission.INTERNET`.
 
-- [ ] **Step 5: Implement date formatting and the initial Compose shell**
+- [x] **Step 5: Implement date formatting and the initial Compose shell**
 
 Implement `fun formatHomeDate(date: LocalDate): String` with a fixed Russian locale, then render a light screen with the product name, the formatted current date, a neutral setup-state card, and a red-accent primary button. Use these foundation colors:
 
@@ -176,12 +176,12 @@ val DividerGray = Color(0xFFE8E8E6)
 
 Dynamic color is disabled so the approved brand direction remains stable across devices.
 
-- [ ] **Step 6: Verify the foundation**
+- [x] **Step 6: Verify the foundation**
 
 Run: `./gradlew testDebugUnitTest lintDebug assembleDebug`  
 Expected: all tasks succeed and `app/build/outputs/apk/debug/app-debug.apk` exists.
 
-- [ ] **Step 7: Commit and publish**
+- [x] **Step 7: Commit and publish**
 
 ```bash
 git add .gitignore settings.gradle.kts build.gradle.kts gradle.properties gradle gradlew gradlew.bat app
