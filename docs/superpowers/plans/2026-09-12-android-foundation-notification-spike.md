@@ -395,7 +395,7 @@ git push origin main
 - Consumes: `RawNotification` from Task 2.
 - Produces: `WhatsAppNotificationParser.parse(RawNotification): ParseResult` for the package router.
 
-- [ ] **Step 1: Write failing direct/group/summary tests**
+- [x] **Step 1: Write failing direct/group/summary tests**
 
 Create fixtures covering:
 
@@ -431,21 +431,21 @@ Create fixtures covering:
 }
 ```
 
-- [ ] **Step 2: Run the WhatsApp tests to verify failure**
+- [x] **Step 2: Run the WhatsApp tests to verify failure**
 
 Run: `./gradlew testDebugUnitTest --tests '*WhatsAppNotificationParserTest'`  
 Expected: compilation failure because `WhatsAppNotificationParser` does not exist.
 
-- [ ] **Step 3: Implement conservative WhatsApp rules**
+- [x] **Step 3: Implement conservative WhatsApp rules**
 
 Reject explicit groups, bundled summaries, and notifications without one identifiable direct contact. Prefer the newest messaging-style entry and require direct-conversation evidence equivalent to the Telegram contract. Never match localized summary text as the sole group-detection mechanism.
 
-- [ ] **Step 4: Run all parser tests**
+- [x] **Step 4: Run all parser tests**
 
 Run: `./gradlew testDebugUnitTest --tests '*NotificationParserTest'`  
 Expected: Telegram, WhatsApp, and routing suites pass.
 
-- [ ] **Step 5: Commit and publish**
+- [x] **Step 5: Commit and publish**
 
 ```bash
 git add app/src/main/java/app/replylater/android/capture/parser/WhatsAppNotificationParser.kt app/src/test/java/app/replylater/android/capture/parser/WhatsAppNotificationParserTest.kt
