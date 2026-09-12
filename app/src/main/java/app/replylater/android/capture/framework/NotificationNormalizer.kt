@@ -8,10 +8,21 @@ import app.replylater.android.capture.model.RawNotification
 import app.replylater.android.capture.parser.SupportedNotificationParser
 
 class NotificationNormalizer {
-    fun normalize(statusBarNotification: StatusBarNotification): RawNotification? {
-        if (!isSupportedPackage(statusBarNotification.packageName)) return null
+    fun normalize(statusBarNotification: StatusBarNotification): RawNotification? = normalize(
+        packageName = statusBarNotification.packageName,
+        notificationKey = statusBarNotification.key,
+        postedAtEpochMillis = statusBarNotification.postTime,
+        notification = statusBarNotification.notification,
+    )
 
-        val notification = statusBarNotification.notification
+    fun normalize(
+        packageName: String,
+        notificationKey: String,
+        postedAtEpochMillis: Long,
+        notification: Notification,
+    ): RawNotification? {
+        if (!isSupportedPackage(packageName)) return null
+
         val extras = notification.extras
         val messagingStyle = NotificationCompat.MessagingStyle
             .extractMessagingStyleFromNotification(notification)
@@ -28,9 +39,9 @@ class NotificationNormalizer {
             .sortedBy(RawMessage::timestampEpochMillis)
 
         return RawNotification(
-            packageName = statusBarNotification.packageName,
-            notificationKey = statusBarNotification.key,
-            postedAtEpochMillis = statusBarNotification.postTime,
+            packageName = packageName,
+            notificationKey = notificationKey,
+            postedAtEpochMillis = postedAtEpochMillis,
             title = normalizeText(extras.getCharSequence(Notification.EXTRA_TITLE)),
             text = normalizeText(extras.getCharSequence(Notification.EXTRA_TEXT)),
             subText = normalizeText(extras.getCharSequence(Notification.EXTRA_SUB_TEXT)),

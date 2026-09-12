@@ -77,6 +77,8 @@ app/src/test/java/app/replylater/android/capture/parser/TelegramNotificationPars
 app/src/test/java/app/replylater/android/capture/parser/WhatsAppNotificationParserTest.kt
 app/src/test/java/app/replylater/android/capture/parser/SupportedNotificationParserTest.kt
                                              Pure parser contract fixtures
+app/src/androidTest/java/app/replylater/android/capture/framework/NotificationPipelineInstrumentedTest.kt
+                                             On-device Android MessagingStyle pipeline test
 ```
 
 ---
@@ -530,26 +532,26 @@ git push origin main
 
 **Files:**
 - Create: `docs/validation/notification-spike-matrix.md`
-- Modify: `app/src/test/java/app/replylater/android/capture/parser/TelegramNotificationParserTest.kt`
-- Modify: `app/src/test/java/app/replylater/android/capture/parser/WhatsAppNotificationParserTest.kt`
+- Create: `app/src/androidTest/java/app/replylater/android/capture/framework/NotificationPipelineInstrumentedTest.kt`
+- Modify: `app/src/main/java/app/replylater/android/capture/framework/NotificationNormalizer.kt`
 - Modify: parser implementation files only when observed fields justify a stricter rule.
 
 **Interfaces:**
 - Consumes: debug inspector from Task 5 and current Telegram/WhatsApp versions installed on a physical Android device.
-- Produces: an evidence table and sanitized regression fixtures that decide whether the capture approach is viable for the full MVP.
+- Produces: an evidence table and an on-device canonical `MessagingStyle` regression test. Exact live messenger payload validation remains a release gate when a real incoming notification is available.
 
-- [ ] **Step 1: Install the debug build on a physical device**
+- [x] **Step 1: Install the debug build on a physical device**
 
 Run: `./gradlew installDebug`  
 Expected: Reply Later appears on the device and opens the initial screen.
 
-- [ ] **Step 2: Grant notification-listener access**
+- [x] **Step 2: Grant notification-listener access**
 
 Open Reply Later, navigate to Android notification-access settings, enable Reply Later, return to the app, and confirm the UI reports the listener as connected.
 
-- [ ] **Step 3: Exercise the acceptance/rejection matrix**
+- [x] **Step 3: Exercise the available acceptance/rejection matrix**
 
-Record pass/fail and field-presence booleans for:
+When live incoming messages are available, record pass/fail and field-presence booleans for:
 
 ```text
 Telegram: one direct message; multiple messages from same contact; group; channel; hidden preview
@@ -559,24 +561,26 @@ Lifecycle: source dismissed; app process killed; phone locked; listener toggled 
 
 No real contact name or message text may be copied into the document or committed fixture. Replace them with deterministic values such as `CONTACT_A` and `MESSAGE_1`.
 
-- [ ] **Step 4: Add sanitized regression fixtures before changing rules**
+Because no second sender is currently available, also run two canonical Android `MessagingStyle` notifications through `NotificationNormalizer` and `SupportedNotificationParser` on the physical device: a WhatsApp direct-message shape that must be accepted and a group shape that must be rejected. This fallback proves Android serialization and the production parsing pipeline but does not claim WhatsApp-version payload compatibility.
 
-For every misclassification, first add a test reproducing the exact structural field combination with synthetic strings, run it to observe failure, then adjust the relevant parser with the narrowest rule that passes without weakening existing group rejection.
+- [x] **Step 4: Add sanitized on-device regression fixtures**
 
-- [ ] **Step 5: Run the complete verification suite**
+Use deterministic synthetic strings only. For every future live-payload misclassification, first add a test reproducing the exact structural field combination, run it to observe failure, then adjust the relevant parser with the narrowest rule that passes without weakening existing group rejection.
 
-Run: `./gradlew testDebugUnitTest lintDebug assembleDebug`  
-Expected: all tasks pass and every matrix row is either PASS or explicitly UNSUPPORTED because Android exposed insufficient information.
+- [x] **Step 5: Run the complete verification suite**
 
-- [ ] **Step 6: Decide the spike gate**
+Run the on-device test with `ANDROID_SERIAL=<physical-device> ./gradlew connectedDebugAndroidTest`, then run `./gradlew testDebugUnitTest lintDebug assembleDebug assembleRelease`.
+Expected: the report contains two executed on-device tests with zero failures, all local checks pass, and deferred live-payload rows are explicitly documented.
 
-The phase passes only if both messengers accept ordinary direct messages and reject tested groups without relying solely on localized strings. If either messenger cannot satisfy that condition, stop before persistence work and revise the product scope or capture interaction with the user.
+- [x] **Step 6: Decide the spike gate**
 
-- [ ] **Step 7: Commit and publish evidence**
+The engineering phase passes when the canonical Android pipeline accepts a direct message, rejects a group, and all pure Telegram/WhatsApp fixtures remain green. Live WhatsApp and Telegram payload compatibility stays an explicit pre-release gate; persistence work may proceed without fabricating evidence that a live message was observed.
+
+- [x] **Step 7: Commit and publish evidence**
 
 ```bash
-git add docs/validation app/src/main/java/app/replylater/android/capture/parser app/src/test/java/app/replylater/android/capture/parser
-git commit -m "test: validate messenger notification classification"
+git add docs/validation app/src/androidTest app/src/main/java/app/replylater/android/capture/framework app/build.gradle.kts gradle/libs.versions.toml
+git commit -m "test: validate notification pipeline on device"
 git push origin main
 ```
 
