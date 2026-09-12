@@ -101,7 +101,7 @@ app/src/main/res/values/strings.xml
 - Consumes: `DirectMessage` from the existing capture parser and an explicit target epoch millis.
 - Produces: `Reminder`, `ReminderStatus`, `ReminderRepository`, `ReminderScheduler`, and `CreateReminder.invoke(message, remindAtEpochMillis)` for action receivers and later UI.
 
-- [ ] **Step 1: Add the coroutine test dependency and write failing status and creation tests**
+- [x] **Step 1: Add the coroutine test dependency and write failing status and creation tests**
 
 Add `org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2` to unit tests, then cover these exact behaviors:
 
@@ -132,13 +132,13 @@ Add `org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2` to unit tests, then c
 }
 ```
 
-- [ ] **Step 2: Run the focused tests and verify RED**
+- [x] **Step 2: Run the focused tests and verify RED**
 
 Run: `./gradlew testDebugUnitTest --tests '*ReminderStatusTest' --tests '*CreateReminderTest'`
 
 Expected: Kotlin compilation fails because the reminder domain types do not exist.
 
-- [ ] **Step 3: Implement the minimal domain**
+- [x] **Step 3: Implement the minimal domain**
 
 Define `Reminder` with string UUID, source package, hashed conversation key, contact name, nullable plaintext-at-domain-boundary message, received/remind/created/updated epoch millis, nullable answered time, and nullable source notification key. Define:
 
@@ -165,13 +165,13 @@ interface ReminderRepository {
 
 `CreateReminder` receives repository, scheduler, clock lambda, and UUID lambda. It rejects targets not later than `now`, upserts first, schedules second, and returns the generated ID.
 
-- [ ] **Step 4: Run focused and full unit tests**
+- [x] **Step 4: Run focused and full unit tests**
 
 Run: `./gradlew testDebugUnitTest --tests '*ReminderStatusTest' --tests '*CreateReminderTest' && ./gradlew testDebugUnitTest`
 
 Expected: all tests pass.
 
-- [ ] **Step 5: Commit and push**
+- [x] **Step 5: Commit and push**
 
 ```bash
 git add gradle/libs.versions.toml app/build.gradle.kts app/src/main/java/app/replylater/android/reminder/domain app/src/test/java/app/replylater/android/reminder/domain
