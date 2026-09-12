@@ -6,7 +6,7 @@
 
 **Architecture:** A single `app` module contains a small Compose shell and a notification-capture feature. Android notification objects are converted at the framework boundary into immutable `RawNotification` values, then messenger-specific pure Kotlin parsers return either a supported `DirectMessage` or an explicit rejection reason. A debug-only in-memory inspector displays sanitized parser decisions on-device without writing message content to Logcat or disk.
 
-**Tech Stack:** Kotlin 2.3.21, Android Gradle Plugin 9.4.0, Gradle 9.6.0, JDK 17 toolchain, compileSdk 37, targetSdk 36, minSdk 26, Jetpack Compose BOM 2026.08.00, Material 3, Hilt 2.57.1, JUnit 4.
+**Tech Stack:** Android Gradle Plugin 9.4.0 with built-in Kotlin 2.3.21, Gradle 9.6.0, JDK 17 toolchain, compileSdk 37, targetSdk 36, minSdk 26, Jetpack Compose BOM 2026.08.00, Material 3, JUnit 4.
 
 **Spec:** `docs/superpowers/specs/2026-09-12-reply-later-android-mvp-design.md`
 
@@ -37,8 +37,6 @@ app/build.gradle.kts                        Android application configuration
 app/src/main/AndroidManifest.xml            Activity, notification listener, and permissions
 app/src/main/res/values/strings.xml         Russian product copy
 app/src/main/res/values/themes.xml          Platform launch theme
-app/src/main/java/app/replylater/android/ReplyLaterApp.kt
-                                             Hilt application entry point
 app/src/main/java/app/replylater/android/MainActivity.kt
                                              Compose activity entry point
 app/src/main/java/app/replylater/android/ui/ReplyLaterRoot.kt
@@ -94,7 +92,6 @@ app/src/test/java/app/replylater/android/capture/parser/SupportedNotificationPar
 - Create: `app/src/main/AndroidManifest.xml`
 - Create: `app/src/main/res/values/strings.xml`
 - Create: `app/src/main/res/values/themes.xml`
-- Create: `app/src/main/java/app/replylater/android/ReplyLaterApp.kt`
 - Create: `app/src/main/java/app/replylater/android/MainActivity.kt`
 - Create: `app/src/main/java/app/replylater/android/ui/ReplyLaterRoot.kt`
 - Create: `app/src/main/java/app/replylater/android/ui/theme/Color.kt`
@@ -104,7 +101,7 @@ app/src/test/java/app/replylater/android/capture/parser/SupportedNotificationPar
 
 **Interfaces:**
 - Consumes: approved visual direction from `design/mockups` and application ID `app.replylater.android`.
-- Produces: `ReplyLaterApp`, `MainActivity`, and `@Composable fun ReplyLaterRoot()` as the executable application shell.
+- Produces: `MainActivity` and `@Composable fun ReplyLaterRoot()` as the executable application shell.
 
 - [ ] **Step 1: Generate the Gradle wrapper and version catalog**
 
@@ -117,7 +114,6 @@ kotlin = "2.3.21"
 composeBom = "2026.08.00"
 activityCompose = "1.13.0"
 lifecycle = "2.11.0"
-hilt = "2.57.1"
 junit = "4.13.2"
 
 [libraries]
@@ -128,15 +124,11 @@ androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ```
 
 - [ ] **Step 2: Write the failing foundation test**
@@ -161,7 +153,7 @@ Expected: failure because the Android application module and `BuildConfig` do no
 
 - [ ] **Step 4: Configure the app module and manifest**
 
-Configure `namespace = "app.replylater.android"`, `compileSdk = 37`, `minSdk = 26`, `targetSdk = 36`, Java/Kotlin toolchain 17, Compose, `buildConfig = true`, Hilt, and unit tests. The manifest must set `android:allowBackup="false"`, use `ReplyLaterApp`, expose only `MainActivity`, and omit `android.permission.INTERNET`.
+Configure `namespace = "app.replylater.android"`, `compileSdk = 37`, `minSdk = 26`, `targetSdk = 36`, Java/Kotlin toolchain 17, AGP built-in Kotlin, Compose, `buildConfig = true`, and unit tests. The manifest must set `android:allowBackup="false"`, expose only `MainActivity`, and omit `android.permission.INTERNET`.
 
 - [ ] **Step 5: Implement the initial Compose shell**
 
@@ -581,4 +573,3 @@ git push origin main
 ## Phase completion
 
 After Task 6 passes, write the next implementation plan for encrypted Room persistence, explicit notification actions, exact/inexact scheduling, and reboot reconciliation. UI feature plans follow only after the end-to-end reminder domain is proven.
-
