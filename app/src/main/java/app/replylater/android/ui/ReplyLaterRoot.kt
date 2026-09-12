@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.replylater.android.ui.theme.CanvasWhite
+import app.replylater.android.capture.debug.CaptureInspectorPanel
 import app.replylater.android.ui.theme.ReplyLaterTheme
 import app.replylater.android.ui.theme.ReplyRed
 import app.replylater.android.ui.theme.SurfaceWhite
@@ -100,6 +101,9 @@ fun ReplyLaterRoot(
             }
         }
 
+        Spacer(Modifier.height(20.dp))
+        CaptureInspectorPanel()
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -122,4 +126,3 @@ private fun ReplyLaterRootPreview() {
         ReplyLaterRoot(today = LocalDate.of(2026, 9, 12))
     }
 }
-

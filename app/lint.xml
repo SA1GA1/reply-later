@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+    <!-- Versions are pinned and upgraded together after compatibility checks. -->
+    <issue id="AndroidGradlePluginVersion" severity="ignore" />
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="NewerVersionAvailable" severity="ignore" />
+
+    <!-- targetSdk 36 is intentional for the first device-validation phase. -->
+    <issue id="OldTargetApi" severity="ignore" />
+
+    <!-- Adaptive icon XML is only valid in a v26-qualified resource directory. -->
+    <issue id="ObsoleteSdkInt" severity="ignore" />
+</lint>

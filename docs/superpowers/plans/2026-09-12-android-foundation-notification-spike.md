@@ -63,12 +63,16 @@ app/src/main/java/app/replylater/android/capture/framework/NotificationNormalize
                                              StatusBarNotification to RawNotification adapter
 app/src/main/java/app/replylater/android/capture/framework/ReplyLaterNotificationListener.kt
                                              NotificationListenerService boundary
+app/src/main/java/app/replylater/android/capture/debug/InspectorEntry.kt
+                                             Sanitized inspector event contract
 app/src/debug/java/app/replylater/android/capture/debug/CaptureInspectorStore.kt
                                              Volatile bounded debug inspection state
 app/src/debug/java/app/replylater/android/capture/debug/CaptureInspectorScreen.kt
                                              On-device sanitized decision viewer
 app/src/release/java/app/replylater/android/capture/debug/CaptureInspectorStore.kt
                                              No-op release implementation
+app/src/release/java/app/replylater/android/capture/debug/CaptureInspectorScreen.kt
+                                             No-op release panel
 app/src/test/java/app/replylater/android/capture/parser/TelegramNotificationParserTest.kt
 app/src/test/java/app/replylater/android/capture/parser/WhatsAppNotificationParserTest.kt
 app/src/test/java/app/replylater/android/capture/parser/SupportedNotificationParserTest.kt
@@ -460,18 +464,21 @@ git push origin main
 **Files:**
 - Create: `app/src/main/java/app/replylater/android/capture/framework/NotificationNormalizer.kt`
 - Create: `app/src/main/java/app/replylater/android/capture/framework/ReplyLaterNotificationListener.kt`
+- Create: `app/src/main/java/app/replylater/android/capture/debug/InspectorEntry.kt`
 - Create: `app/src/debug/java/app/replylater/android/capture/debug/CaptureInspectorStore.kt`
 - Create: `app/src/debug/java/app/replylater/android/capture/debug/CaptureInspectorScreen.kt`
 - Create: `app/src/release/java/app/replylater/android/capture/debug/CaptureInspectorStore.kt`
+- Create: `app/src/release/java/app/replylater/android/capture/debug/CaptureInspectorScreen.kt`
 - Modify: `app/src/main/AndroidManifest.xml`
 - Modify: `app/src/main/java/app/replylater/android/ui/ReplyLaterRoot.kt`
 - Test: `app/src/test/java/app/replylater/android/capture/framework/NotificationNormalizerPolicyTest.kt`
+- Test: `app/src/test/java/app/replylater/android/capture/debug/CaptureInspectorStoreTest.kt`
 
 **Interfaces:**
 - Consumes: Android `StatusBarNotification`, `SupportedNotificationParser`, and `ParseResult`.
 - Produces: notification-listener lifecycle integration and sanitized in-memory `InspectorEntry` state for physical-device validation.
 
-- [ ] **Step 1: Write failing normalization-policy tests**
+- [x] **Step 1: Write failing normalization-policy tests**
 
 Extract Android-independent policy helpers and test that whitespace is normalized, blank contacts become null, message arrays remain chronological, and unsupported packages are rejected before extras are copied.
 
@@ -487,29 +494,29 @@ Extract Android-independent policy helpers and test that whitespace is normalize
 }
 ```
 
-- [ ] **Step 2: Run the policy tests to verify failure**
+- [x] **Step 2: Run the policy tests to verify failure**
 
 Run: `./gradlew testDebugUnitTest --tests '*NotificationNormalizerPolicyTest'`  
 Expected: compilation failure because the helpers do not exist.
 
-- [ ] **Step 3: Implement `NotificationNormalizer`**
+- [x] **Step 3: Implement `NotificationNormalizer`**
 
 Read only documented notification fields: package, key, post time, category, `EXTRA_TITLE`, `EXTRA_TEXT`, `EXTRA_SUB_TEXT`, `EXTRA_CONVERSATION_TITLE`, `EXTRA_IS_GROUP_CONVERSATION`, and `Notification.MessagingStyle.Message` bundles. Convert spans to plain strings immediately and cap all text fields at 4,096 characters in memory.
 
-- [ ] **Step 4: Implement the listener service**
+- [x] **Step 4: Implement the listener service**
 
 Declare the service with `android.permission.BIND_NOTIFICATION_LISTENER_SERVICE`, `android:exported="true"`, and the notification-listener intent filter. In `onNotificationPosted`, return immediately for the app's own package and unsupported packages, normalize, parse, and forward only a sanitized decision object to the debug store. Do not call `Log.*` with payload fields.
 
-- [ ] **Step 5: Implement the debug-only inspector**
+- [x] **Step 5: Implement the debug-only inspector**
 
 Keep at most 50 volatile entries containing timestamp, messenger, accepted/rejected state, rejection reason, and booleans describing which fields existed. Show contact and message preview only behind an explicit “Показывать содержимое в этой сессии” switch that defaults off and resets after process death. The release source set provides a no-op store and no inspector destination.
 
-- [ ] **Step 6: Verify build variants and manifest**
+- [x] **Step 6: Verify build variants and manifest**
 
 Run: `./gradlew testDebugUnitTest lintDebug assembleDebug assembleRelease`  
 Expected: tests and lint pass; both APK variants build; `aapt dump permissions` confirms there is no `INTERNET` permission.
 
-- [ ] **Step 7: Commit and publish**
+- [x] **Step 7: Commit and publish**
 
 ```bash
 git add app/src/main app/src/debug app/src/release app/src/test

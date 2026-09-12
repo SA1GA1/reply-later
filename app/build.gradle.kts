@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime)
 
@@ -52,4 +53,3 @@ dependencies {
 
     testImplementation(libs.junit)
 }
-
