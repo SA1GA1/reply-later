@@ -276,29 +276,29 @@ git push origin main
 - Consumes: unfinished reminders from `ReminderRepository`.
 - Produces: `ReminderScheduler.schedule(id, remindAt)`/`cancel(id)`, pure exact/inexact selection, and reusable reconciliation logic.
 
-- [ ] **Step 1: Write failing scheduler-policy tests**
+- [x] **Step 1: Write failing scheduler-policy tests**
 
 Prove API 31+ with exact authorization selects exact; API 31+ without access selects inexact; API 26–30 selects exact; past targets select immediate inexact delivery; reconciliation schedules only unanswered future items and immediately publishes overdue items once without changing their stored target.
 
-- [ ] **Step 2: Run tests and verify RED**
+- [x] **Step 2: Run tests and verify RED**
 
 Run: `./gradlew testDebugUnitTest --tests '*AlarmPlanSelectorTest' --tests '*ReminderReconcilerTest'`
 
 Expected: compilation fails because scheduling types do not exist.
 
-- [ ] **Step 3: Implement policy and Android scheduler**
+- [x] **Step 3: Implement policy and Android scheduler**
 
 Use `setExactAndAllowWhileIdle` only when `AlarmManager.canScheduleExactAlarms()` is true on API 31+, otherwise `setAndAllowWhileIdle`. Build immutable/update-current broadcast PendingIntents keyed by a stable request code derived from reminder UUID and include only the reminder ID. Scheduling the same ID replaces its previous alarm.
 
-- [ ] **Step 4: Implement reusable reconciliation**
+- [x] **Step 4: Implement reusable reconciliation**
 
 `ReminderReconciler` reads all unfinished reminders and schedules future targets idempotently. Past targets are returned as overdue delivery IDs so the Android receiver added later can publish them once. Extend `AppGraph` with the scheduler and reconciler.
 
-- [ ] **Step 5: Verify tests and manifest**
+- [x] **Step 5: Verify tests and manifest**
 
 Run: `./gradlew testDebugUnitTest lintDebug assembleDebug`. Expected: tests/build/lint pass and the merged manifest still omits `INTERNET`.
 
-- [ ] **Step 6: Commit and push**
+- [x] **Step 6: Commit and push**
 
 ```bash
 git add app/src/main/java/app/replylater/android/AppGraph.kt app/src/main/java/app/replylater/android/reminder/schedule app/src/test/java/app/replylater/android/reminder/schedule
