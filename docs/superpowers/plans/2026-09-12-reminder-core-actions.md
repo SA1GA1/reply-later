@@ -204,21 +204,21 @@ git push origin main
 - Consumes: `ReminderRepository` and `Reminder` from Task 1.
 - Produces: Room database version 1, a repository that encrypts/decrypts only at its boundary, and the process-wide application graph that later tasks extend.
 
-- [ ] **Step 1: Add processor and persistence dependencies**
+- [x] **Step 1: Add processor and persistence dependencies**
 
 Add KSP plugin `2.3.12` and Room `2.8.5`. Apply KSP to `app`; add `room-runtime`, `room-ktx`, `room-compiler` via `ksp`, and `room-testing` for androidTest. Configure Room schema output under `app/schemas` and commit generated version-1 JSON.
 
-- [ ] **Step 2: Write failing repository, database, and cipher tests**
+- [x] **Step 2: Write failing repository, database, and cipher tests**
 
 The fake-cipher repository test must prove that plaintext passed to `upsert` becomes ciphertext/IV in `ReminderEntity` and is decrypted on `get`. The in-memory Room test must prove insert, observe, answer, reschedule, delete, and unfinished ordering. The device cipher test must prove a round trip and that encrypting the same text twice yields distinct IV/ciphertext pairs.
 
-- [ ] **Step 3: Run tests and verify RED**
+- [x] **Step 3: Run tests and verify RED**
 
 Run: `./gradlew testDebugUnitTest --tests '*RoomReminderRepositoryTest'`
 
 Expected: compilation fails because persistence and cipher types do not exist.
 
-- [ ] **Step 4: Implement cipher and Room schema**
+- [x] **Step 4: Implement cipher and Room schema**
 
 Define:
 
@@ -235,7 +235,7 @@ interface MessageCipher {
 
 Create `ReplyLaterApplication` and set `android:name` in the manifest. Its `AppGraph` initially exposes the database, cipher, and repository; later tasks add scheduler and notification services without changing consumers.
 
-- [ ] **Step 5: Verify JVM and physical-device persistence tests**
+- [x] **Step 5: Verify JVM and physical-device persistence tests**
 
 Run:
 
@@ -246,11 +246,11 @@ ANDROID_SERIAL="$(adb devices -l | awk '/model:RMX3938/{print $1; exit}')" ./gra
 
 Expected: repository tests pass; device report includes the existing two pipeline tests plus Room/cipher tests with zero failures.
 
-- [ ] **Step 6: Verify ciphertext-at-rest**
+- [x] **Step 6: Verify ciphertext-at-rest**
 
 Insert only synthetic `MESSAGE_1`, pull the debug database from the debuggable app, and search SQLite output for that exact token. Expected: the token is absent while repository retrieval returns `MESSAGE_1`. Delete the pulled temporary database after inspection.
 
-- [ ] **Step 7: Commit and push**
+- [x] **Step 7: Commit and push**
 
 ```bash
 git add gradle/libs.versions.toml build.gradle.kts app/build.gradle.kts app/schemas app/src/main/AndroidManifest.xml app/src/main/java/app/replylater/android/ReplyLaterApplication.kt app/src/main/java/app/replylater/android/AppGraph.kt app/src/main/java/app/replylater/android/reminder app/src/test/java/app/replylater/android/reminder app/src/androidTest/java/app/replylater/android/reminder
