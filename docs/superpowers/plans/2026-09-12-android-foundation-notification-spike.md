@@ -204,7 +204,7 @@ git push origin main
 - Consumes: normalized strings and messaging-style participants from the future framework adapter.
 - Produces: `NotificationParser.parse(RawNotification): ParseResult`, `ParseResult.Accepted`, and `ParseResult.Rejected` for messenger parsers and the listener.
 
-- [ ] **Step 1: Write the failing router tests**
+- [x] **Step 1: Write the failing router tests**
 
 ```kotlin
 class SupportedNotificationParserTest {
@@ -229,12 +229,12 @@ class SupportedNotificationParserTest {
 }
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `./gradlew testDebugUnitTest --tests '*SupportedNotificationParserTest'`  
 Expected: compilation failure because capture model and parser types do not exist.
 
-- [ ] **Step 3: Implement immutable input and result types**
+- [x] **Step 3: Implement immutable input and result types**
 
 Define:
 
@@ -290,16 +290,16 @@ fun interface NotificationParser {
 
 The `conversationKey` is a deterministic SHA-256 digest of package name plus stable normalized conversation input; raw identifiers are not persisted by this spike.
 
-- [ ] **Step 4: Implement strict package routing**
+- [x] **Step 4: Implement strict package routing**
 
 `SupportedNotificationParser` delegates only the two exact package names and returns `UNSUPPORTED_PACKAGE` for everything else.
 
-- [ ] **Step 5: Run parser routing tests**
+- [x] **Step 5: Run parser routing tests**
 
 Run: `./gradlew testDebugUnitTest --tests '*SupportedNotificationParserTest'`  
 Expected: all three tests pass.
 
-- [ ] **Step 6: Commit and publish**
+- [x] **Step 6: Commit and publish**
 
 ```bash
 git add app/src/main/java/app/replylater/android/capture app/src/test/java/app/replylater/android/capture
