@@ -97,4 +97,3 @@ class NotificationPipelineInstrumentedTest {
         .setName(name)
         .build()
 }
-
