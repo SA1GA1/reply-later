@@ -329,33 +329,33 @@ git push origin main
 - Consumes: accepted `DirectMessage`, source notification content PendingIntent, and `CreateReminder`.
 - Produces: quiet companion notification state machine: Reply later → 30 min / 60 min / More.
 
-- [ ] **Step 1: Write failing payload and action-handler tests**
+- [x] **Step 1: Write failing payload and action-handler tests**
 
 Prove the codec round-trips only supported messenger values, hashed conversation key, synthetic contact/message, timestamps, and source key; rejects missing/invalid fields; never creates a reminder for initial publication or Reply later expansion; creates exactly one reminder for 30/60; and returns a custom-time navigation result for More.
 
-- [ ] **Step 2: Run tests and verify RED**
+- [x] **Step 2: Run tests and verify RED**
 
 Run: `./gradlew testDebugUnitTest --tests '*CapturePayloadCodecTest' --tests '*CaptureActionHandlerTest'`
 
 Expected: compilation fails because companion types do not exist.
 
-- [ ] **Step 3: Implement the pure handler and safe payload codec**
+- [x] **Step 3: Implement the pure handler and safe payload codec**
 
 Use explicit action constants scoped to the package. Encode values as primitive Intent extras held by Android's PendingIntent; do not write them to app storage before a time action. Cap decoded contact/message lengths using the existing normalizer limit and reject unsupported package/messenger combinations.
 
-- [ ] **Step 4: Implement quiet companion notifications**
+- [x] **Step 4: Implement quiet companion notifications**
 
 Create channel `capture_candidates_v1` at `IMPORTANCE_LOW`, vibration disabled, sound null, badge disabled. Initial notification has one `Ответить позже` action. Expansion republishes the same notification ID with `30 мин`, `60 мин`, and `Ещё`. IDs are stable per messenger plus conversation key; newer messages replace the same conversation notification.
 
-- [ ] **Step 5: Connect listener lifecycle**
+- [x] **Step 5: Connect listener lifecycle**
 
 On accepted notification, register its transient content PendingIntent and publish the companion. On source removal, cancel the companion and remove the transient intent unless the candidate has already been saved. Rejected and unsupported notifications remain inspector-only.
 
-- [ ] **Step 6: Verify tests and build variants**
+- [x] **Step 6: Verify tests and build variants**
 
 Run: `./gradlew testDebugUnitTest lintDebug assembleDebug assembleRelease`. Expected: all pass; release still contains no content inspector behavior and no network permission.
 
-- [ ] **Step 7: Commit and push**
+- [x] **Step 7: Commit and push**
 
 ```bash
 git add app/src/main/AndroidManifest.xml app/src/main/res/values/strings.xml app/src/main/java/app/replylater/android/capture app/src/main/java/app/replylater/android/notification app/src/test/java/app/replylater/android/capture

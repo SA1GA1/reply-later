@@ -4,6 +4,8 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import app.replylater.android.capture.debug.CaptureInspectorStore
 import app.replylater.android.capture.debug.InspectorEntry
+import app.replylater.android.ReplyLaterApplication
+import app.replylater.android.capture.companion.toCapturePayload
 import app.replylater.android.capture.model.Messenger
 import app.replylater.android.capture.parser.ParseResult
 import app.replylater.android.capture.parser.SupportedNotificationParser
@@ -39,12 +41,35 @@ class ReplyLaterNotificationListener : NotificationListenerService() {
                 messagePreview = accepted?.message?.messageText,
             ),
         )
+
+        accepted?.message?.let { message ->
+            val graph = (applicationContext as ReplyLaterApplication).graph
+            val payload = message.toCapturePayload(raw.packageName)
+            graph.sourceIntentRegistry.put(
+                sourceNotificationKey = message.notificationKey,
+                payload = payload,
+                contentIntent = statusBarNotification.notification.contentIntent,
+            )
+            graph.companionNotificationPublisher.publishInitial(payload)
+        }
+    }
+
+    override fun onNotificationRemoved(statusBarNotification: StatusBarNotification) {
+        if (statusBarNotification.packageName !in SUPPORTED_PACKAGES) return
+        val graph = (applicationContext as ReplyLaterApplication).graph
+        graph.sourceIntentRegistry.remove(statusBarNotification.key)?.let { entry ->
+            graph.companionNotificationPublisher.cancel(entry.payload)
+        }
     }
 }
+
+private val SUPPORTED_PACKAGES = setOf(
+    SupportedNotificationParser.TELEGRAM_PACKAGE,
+    SupportedNotificationParser.WHATSAPP_PACKAGE,
+)
 
 private fun String.toMessenger(): Messenger? = when (this) {
     SupportedNotificationParser.TELEGRAM_PACKAGE -> Messenger.TELEGRAM
     SupportedNotificationParser.WHATSAPP_PACKAGE -> Messenger.WHATSAPP
     else -> null
 }
-
