@@ -319,7 +319,7 @@ git push origin main
 - Consumes: `RawNotification` from Task 2.
 - Produces: `TelegramNotificationParser.parse(RawNotification): ParseResult` for the package router.
 
-- [ ] **Step 1: Write failing direct/group/ambiguous tests**
+- [x] **Step 1: Write failing direct/group/ambiguous tests**
 
 Create fixtures covering:
 
@@ -361,21 +361,21 @@ Create fixtures covering:
 }
 ```
 
-- [ ] **Step 2: Run the Telegram tests to verify failure**
+- [x] **Step 2: Run the Telegram tests to verify failure**
 
 Run: `./gradlew testDebugUnitTest --tests '*TelegramNotificationParserTest'`  
 Expected: compilation failure because `TelegramNotificationParser` does not exist.
 
-- [ ] **Step 3: Implement conservative Telegram rules**
+- [x] **Step 3: Implement conservative Telegram rules**
 
 Reject when `isGroupConversation == true`, when a nonblank `conversationTitle` conflicts with the direct contact title, or when inspected current-device fixtures contain a confirmed channel/bot marker. Accept only a message-category notification with a nonblank contact and either `isGroupConversation == false` or one unambiguous sender matching the title. Prefer the newest messaging-style entry over summary text.
 
-- [ ] **Step 4: Run Telegram parser tests**
+- [x] **Step 4: Run Telegram parser tests**
 
 Run: `./gradlew testDebugUnitTest --tests '*TelegramNotificationParserTest'`  
 Expected: all Telegram cases pass.
 
-- [ ] **Step 5: Commit and publish**
+- [x] **Step 5: Commit and publish**
 
 ```bash
 git add app/src/main/java/app/replylater/android/capture/parser/TelegramNotificationParser.kt app/src/test/java/app/replylater/android/capture/parser/TelegramNotificationParserTest.kt
