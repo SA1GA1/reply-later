@@ -41,6 +41,8 @@ app/src/main/java/app/replylater/android/MainActivity.kt
                                              Compose activity entry point
 app/src/main/java/app/replylater/android/ui/ReplyLaterRoot.kt
                                              Initial setup/debug navigation shell
+app/src/main/java/app/replylater/android/ui/HomeDateFormatter.kt
+                                             Russian home-header date formatting
 app/src/main/java/app/replylater/android/ui/theme/Color.kt
 app/src/main/java/app/replylater/android/ui/theme/Theme.kt
 app/src/main/java/app/replylater/android/ui/theme/Type.kt
@@ -97,7 +99,7 @@ app/src/test/java/app/replylater/android/capture/parser/SupportedNotificationPar
 - Create: `app/src/main/java/app/replylater/android/ui/theme/Color.kt`
 - Create: `app/src/main/java/app/replylater/android/ui/theme/Theme.kt`
 - Create: `app/src/main/java/app/replylater/android/ui/theme/Type.kt`
-- Test: `app/src/test/java/app/replylater/android/FoundationTest.kt`
+- Test: `app/src/test/java/app/replylater/android/ui/HomeDateFormatterTest.kt`
 
 **Interfaces:**
 - Consumes: approved visual direction from `design/mockups` and application ID `app.replylater.android`.
@@ -131,17 +133,20 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ```
 
-- [ ] **Step 2: Write the failing foundation test**
+- [ ] **Step 2: Write the failing home-date test**
 
 ```kotlin
-package app.replylater.android
+package app.replylater.android.ui
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.time.LocalDate
 
-class FoundationTest {
-    @Test fun applicationId_isStable() {
-        assertEquals("app.replylater.android", BuildConfig.APPLICATION_ID)
+class HomeDateFormatterTest {
+    @Test fun formatsDateForRussianInboxHeader() {
+        val result = formatHomeDate(LocalDate.of(2026, 9, 12))
+
+        assertEquals("суббота, 12 сентября", result)
     }
 }
 ```
@@ -149,15 +154,15 @@ class FoundationTest {
 - [ ] **Step 3: Run the test and confirm the project is not yet buildable**
 
 Run: `./gradlew testDebugUnitTest`  
-Expected: failure because the Android application module and `BuildConfig` do not exist yet.
+Expected: compilation failure because `formatHomeDate` does not exist yet.
 
 - [ ] **Step 4: Configure the app module and manifest**
 
 Configure `namespace = "app.replylater.android"`, `compileSdk = 37`, `minSdk = 26`, `targetSdk = 36`, Java/Kotlin toolchain 17, AGP built-in Kotlin, Compose, `buildConfig = true`, and unit tests. The manifest must set `android:allowBackup="false"`, expose only `MainActivity`, and omit `android.permission.INTERNET`.
 
-- [ ] **Step 5: Implement the initial Compose shell**
+- [ ] **Step 5: Implement date formatting and the initial Compose shell**
 
-Render a light screen with the product name, current date from `java.time`, a neutral setup-state card, and a red-accent primary button. Use these foundation colors:
+Implement `fun formatHomeDate(date: LocalDate): String` with a fixed Russian locale, then render a light screen with the product name, the formatted current date, a neutral setup-state card, and a red-accent primary button. Use these foundation colors:
 
 ```kotlin
 val ReplyRed = Color(0xFFE5484D)
